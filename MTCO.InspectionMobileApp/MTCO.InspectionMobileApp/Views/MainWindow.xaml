@@ -1,0 +1,16 @@
+﻿<Window x:Class="MTCO.InspectionMobileApp.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:prism="http://prismlibrary.com/"
+        prism:ViewModelLocator.AutoWireViewModel="True"
+        Title="{Binding Title}" 
+        ScrollViewer.VerticalScrollBarVisibility="Auto"
+        ScrollViewer.HorizontalScrollBarVisibility="Auto"
+        WindowState="Maximized"
+        Icon="MSIRS-MSRIN.ico"
+        MinWidth="1200" MinHeight="800"
+        >
+    <Grid>
+        <ContentControl prism:RegionManager.RegionName="MainRegion" VerticalAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+    </Grid>
+</Window>

@@ -1,0 +1,133 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2020
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTCO.InspectionMobileApp", "MTCO.InspectionMobileApp\MTCO.InspectionMobileApp.csproj", "{99C9E82C-C594-446D-AA59-8FFBC43AD226}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTCO.InspectionMobileApp.ReferenceCentre", "MTCO.InspectionMobileApp.ReferenceCentre\MTCO.InspectionMobileApp.ReferenceCentre.csproj", "{CD5AAE10-8FA9-4800-A7D4-8AA982DF3352}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FE7DEE2F-A4E1-463B-82C1-51808A9A9334} = {FE7DEE2F-A4E1-463B-82C1-51808A9A9334}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Oversight", "Oversight", "{954E9085-2464-44AD-A9BB-E864E1FEA3C2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Local", "Local", "{3FBA5CDB-737D-47F3-949F-F6A3B96F5552}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTCO.InspectionMobileApp.Local.DataAccess", "MTCO.InspectionMobileApp.Local.DataAccess\MTCO.InspectionMobileApp.Local.DataAccess.csproj", "{E9C96B75-3C21-4FAA-8E8E-ED7A7C1929FB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{4A56EFAF-7737-4700-92AC-8687A5234629}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTCO.InspectionMobileApp.Local.DTO", "MTCO.InspectionMobileApp.Local.DTO\MTCO.InspectionMobileApp.Local.DTO.csproj", "{11F83A6F-F78D-471B-B976-7640E892AFD8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTCO.InspectionMobileApp.BLL.Local", "MTCO.InspectionMobileApp.BLL.Local\MTCO.InspectionMobileApp.BLL.Local.csproj", "{FE7DEE2F-A4E1-463B-82C1-51808A9A9334}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{99C9E82C-C594-446D-AA59-8FFBC43AD226}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99C9E82C-C594-446D-AA59-8FFBC43AD226}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99C9E82C-C594-446D-AA59-8FFBC43AD226}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{99C9E82C-C594-446D-AA59-8FFBC43AD226}.Debug|x64.Build.0 = Debug|Any CPU
+		{99C9E82C-C594-446D-AA59-8FFBC43AD226}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{99C9E82C-C594-446D-AA59-8FFBC43AD226}.Debug|x86.Build.0 = Debug|Any CPU
+		{99C9E82C-C594-446D-AA59-8FFBC43AD226}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99C9E82C-C594-446D-AA59-8FFBC43AD226}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99C9E82C-C594-446D-AA59-8FFBC43AD226}.Release|x64.ActiveCfg = Release|Any CPU
+		{99C9E82C-C594-446D-AA59-8FFBC43AD226}.Release|x64.Build.0 = Release|Any CPU
+		{99C9E82C-C594-446D-AA59-8FFBC43AD226}.Release|x86.ActiveCfg = Release|Any CPU
+		{99C9E82C-C594-446D-AA59-8FFBC43AD226}.Release|x86.Build.0 = Release|Any CPU
+		{CD5AAE10-8FA9-4800-A7D4-8AA982DF3352}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD5AAE10-8FA9-4800-A7D4-8AA982DF3352}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD5AAE10-8FA9-4800-A7D4-8AA982DF3352}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CD5AAE10-8FA9-4800-A7D4-8AA982DF3352}.Debug|x64.Build.0 = Debug|Any CPU
+		{CD5AAE10-8FA9-4800-A7D4-8AA982DF3352}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CD5AAE10-8FA9-4800-A7D4-8AA982DF3352}.Debug|x86.Build.0 = Debug|Any CPU
+		{CD5AAE10-8FA9-4800-A7D4-8AA982DF3352}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD5AAE10-8FA9-4800-A7D4-8AA982DF3352}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD5AAE10-8FA9-4800-A7D4-8AA982DF3352}.Release|x64.ActiveCfg = Release|Any CPU
+		{CD5AAE10-8FA9-4800-A7D4-8AA982DF3352}.Release|x64.Build.0 = Release|Any CPU
+		{CD5AAE10-8FA9-4800-A7D4-8AA982DF3352}.Release|x86.ActiveCfg = Release|Any CPU
+		{CD5AAE10-8FA9-4800-A7D4-8AA982DF3352}.Release|x86.Build.0 = Release|Any CPU
+		{E9C96B75-3C21-4FAA-8E8E-ED7A7C1929FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9C96B75-3C21-4FAA-8E8E-ED7A7C1929FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9C96B75-3C21-4FAA-8E8E-ED7A7C1929FB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E9C96B75-3C21-4FAA-8E8E-ED7A7C1929FB}.Debug|x64.Build.0 = Debug|Any CPU
+		{E9C96B75-3C21-4FAA-8E8E-ED7A7C1929FB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E9C96B75-3C21-4FAA-8E8E-ED7A7C1929FB}.Debug|x86.Build.0 = Debug|Any CPU
+		{E9C96B75-3C21-4FAA-8E8E-ED7A7C1929FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9C96B75-3C21-4FAA-8E8E-ED7A7C1929FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9C96B75-3C21-4FAA-8E8E-ED7A7C1929FB}.Release|x64.ActiveCfg = Release|Any CPU
+		{E9C96B75-3C21-4FAA-8E8E-ED7A7C1929FB}.Release|x64.Build.0 = Release|Any CPU
+		{E9C96B75-3C21-4FAA-8E8E-ED7A7C1929FB}.Release|x86.ActiveCfg = Release|Any CPU
+		{E9C96B75-3C21-4FAA-8E8E-ED7A7C1929FB}.Release|x86.Build.0 = Release|Any CPU
+		{11F83A6F-F78D-471B-B976-7640E892AFD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11F83A6F-F78D-471B-B976-7640E892AFD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11F83A6F-F78D-471B-B976-7640E892AFD8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{11F83A6F-F78D-471B-B976-7640E892AFD8}.Debug|x64.Build.0 = Debug|Any CPU
+		{11F83A6F-F78D-471B-B976-7640E892AFD8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{11F83A6F-F78D-471B-B976-7640E892AFD8}.Debug|x86.Build.0 = Debug|Any CPU
+		{11F83A6F-F78D-471B-B976-7640E892AFD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11F83A6F-F78D-471B-B976-7640E892AFD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11F83A6F-F78D-471B-B976-7640E892AFD8}.Release|x64.ActiveCfg = Release|Any CPU
+		{11F83A6F-F78D-471B-B976-7640E892AFD8}.Release|x64.Build.0 = Release|Any CPU
+		{11F83A6F-F78D-471B-B976-7640E892AFD8}.Release|x86.ActiveCfg = Release|Any CPU
+		{11F83A6F-F78D-471B-B976-7640E892AFD8}.Release|x86.Build.0 = Release|Any CPU
+		{FE7DEE2F-A4E1-463B-82C1-51808A9A9334}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE7DEE2F-A4E1-463B-82C1-51808A9A9334}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE7DEE2F-A4E1-463B-82C1-51808A9A9334}.Debug|x64.ActiveCfg = Debug|x64
+		{FE7DEE2F-A4E1-463B-82C1-51808A9A9334}.Debug|x64.Build.0 = Debug|x64
+		{FE7DEE2F-A4E1-463B-82C1-51808A9A9334}.Debug|x86.ActiveCfg = Debug|x86
+		{FE7DEE2F-A4E1-463B-82C1-51808A9A9334}.Debug|x86.Build.0 = Debug|x86
+		{FE7DEE2F-A4E1-463B-82C1-51808A9A9334}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE7DEE2F-A4E1-463B-82C1-51808A9A9334}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE7DEE2F-A4E1-463B-82C1-51808A9A9334}.Release|x64.ActiveCfg = Release|x64
+		{FE7DEE2F-A4E1-463B-82C1-51808A9A9334}.Release|x64.Build.0 = Release|x64
+		{FE7DEE2F-A4E1-463B-82C1-51808A9A9334}.Release|x86.ActiveCfg = Release|x86
+		{FE7DEE2F-A4E1-463B-82C1-51808A9A9334}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CD5AAE10-8FA9-4800-A7D4-8AA982DF3352} = {4A56EFAF-7737-4700-92AC-8687A5234629}
+		{3FBA5CDB-737D-47F3-949F-F6A3B96F5552} = {954E9085-2464-44AD-A9BB-E864E1FEA3C2}
+		{E9C96B75-3C21-4FAA-8E8E-ED7A7C1929FB} = {3FBA5CDB-737D-47F3-949F-F6A3B96F5552}
+		{4A56EFAF-7737-4700-92AC-8687A5234629} = {954E9085-2464-44AD-A9BB-E864E1FEA3C2}
+		{11F83A6F-F78D-471B-B976-7640E892AFD8} = {3FBA5CDB-737D-47F3-949F-F6A3B96F5552}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A2BB2F6B-B6D1-466C-B805-9C3E0476D0BA}
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 6
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://ncras479:8080/tfs/major_transformation
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = MTCO.InspectionMobileApp\\MTCO.InspectionMobileApp.csproj
+		SccProjectName1 = MTCO.InspectionMobileApp
+		SccLocalPath1 = MTCO.InspectionMobileApp
+		SccProjectUniqueName2 = MTCO.InspectionMobileApp.ReferenceCentre\\MTCO.InspectionMobileApp.ReferenceCentre.csproj
+		SccProjectTopLevelParentUniqueName2 = MTCO.InspectionMobileApp.sln
+		SccProjectName2 = MTCO.InspectionMobileApp.ReferenceCentre
+		SccLocalPath2 = MTCO.InspectionMobileApp.ReferenceCentre
+		SccProjectUniqueName3 = MTCO.InspectionMobileApp.Local.DTO\\MTCO.InspectionMobileApp.Local.DTO.csproj
+		SccProjectTopLevelParentUniqueName3 = MTCO.InspectionMobileApp.sln
+		SccProjectName3 = MTCO.InspectionMobileApp.Local.DTO
+		SccLocalPath3 = MTCO.InspectionMobileApp.Local.DTO
+		SccProjectUniqueName4 = MTCO.InspectionMobileApp.Local.DataAccess\\MTCO.InspectionMobileApp.Local.DataAccess.csproj
+		SccProjectTopLevelParentUniqueName4 = MTCO.InspectionMobileApp.sln
+		SccProjectName4 = MTCO.InspectionMobileApp.Local.DataAccess
+		SccLocalPath4 = MTCO.InspectionMobileApp.Local.DataAccess
+		SccProjectUniqueName5 = MTCO.InspectionMobileApp.BLL.Local\\MTCO.InspectionMobileApp.BLL.Local.csproj
+		SccProjectName5 = MTCO.InspectionMobileApp.BLL.Local
+		SccLocalPath5 = MTCO.InspectionMobileApp.BLL.Local
+	EndGlobalSection
+EndGlobal
