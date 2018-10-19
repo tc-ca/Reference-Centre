@@ -37,5 +37,5 @@ https://docs.microsoft.com/en-us/nuget/consume-packages/package-restore-troubles
 - Press "F5" key or Go to Debug Menu in Visual Studio and select "Start Debugging"
 
 ### Changing Folder Location
-If you wish to point to a specific folder you need to modify the "App.Config" file in the root directory.
+If you wish to point to a specific folder, you need to modify the "App.Config" file in the root directory.
 Then you need to find the *"OfflineDrivePath"* Key and set to your desired path (usually the default path is set to *"C:\\"*).
