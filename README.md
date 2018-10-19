@@ -19,6 +19,15 @@ It was originally designed for Tablets running Windows 7 and provides quick:
 - SQLite (should be restored through NuGet)
 - System with Windows 7 with 4GB RAM or better
 
+## Setup
+### How To Compile The Application
+- Load the project in Visual Studio 2017
+- Restore NuGet Packages ([see the instruction below](#how-to-restore-nuget-pakcages)).
+- Press "F5" key or Go to Debug Menu in Visual Studio and select "Start Debugging"
+
+### Changing Folder Location
+If you wish to point to a specific folder, you need to modify the "App.Config" file in the root directory.
+Then you need to find the *"OfflineDrivePath"* Key and set to your desired path (usually the default path is set to *"C:\\"*).
 
 ## How to restore NuGet Pakcages
 If you're using Visual Studio, first enable package restore as follows. Otherwise continue to the sections that follow.
@@ -29,13 +38,3 @@ If you're using Visual Studio, first enable package restore as follows. Otherwis
 * Build your project again.
 > Please review the following link for further help with NuGet:
 https://docs.microsoft.com/en-us/nuget/consume-packages/package-restore-troubleshooting
-
-## Setup
-### How To Compile The Application
-- Load the project in Visual Studio 2017
-- Restore NuGet Packages ([see the instruction above](#how-to-restore-nuget-pakcages)).
-- Press "F5" key or Go to Debug Menu in Visual Studio and select "Start Debugging"
-
-### Changing Folder Location
-If you wish to point to a specific folder, you need to modify the "App.Config" file in the root directory.
-Then you need to find the *"OfflineDrivePath"* Key and set to your desired path (usually the default path is set to *"C:\\"*).
