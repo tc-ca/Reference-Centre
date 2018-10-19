@@ -30,7 +30,7 @@ It was originally designed for Tablets running on Windows 8.1 and has been teste
 If you wish to point to a specific folder, you need to modify the "App.Config" file in the root directory.
 Then you need to find the *"OfflineDrivePath"* Key and set to your desired path (usually the default path is set to *"C:\\"*).
 
-## How to restore NuGet Pakcages
+## How to restore NuGet Packages
 If you're using Visual Studio, first enable package restore as follows. Otherwise continue to the sections that follow.
 
 * Select the Tools > NuGet Package Manager > Package Manager Settings menu command.
