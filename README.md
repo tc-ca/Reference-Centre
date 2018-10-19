@@ -18,7 +18,7 @@ It was originally designed for Tablets running on Windows 8.1 and has been teste
 - PRISM (should be restored through NuGet)
 - EF6 (should be restored through NuGet)
 - SQLite (should be restored through NuGet)
-- System with Windows 7 with 4GB RAM or better
+- System with Windows 7 and up with 4GB RAM or better
 
 ## Setup
 ### How To Compile The Application
