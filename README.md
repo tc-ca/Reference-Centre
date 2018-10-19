@@ -33,7 +33,7 @@ https://docs.microsoft.com/en-us/nuget/consume-packages/package-restore-troubles
 ## Setup
 ### How To Compile The Application
 - Load the project in Visual Studio 2017
-- Restore NuGet Packages ([see the instruction above](#How-to-restore-NuGet-Pakcages)).
+- Restore NuGet Packages ([see the instruction above](#how-to-restore-nuget-pakcages)).
 - Press "F5" key or Go to Debug Menu in Visual Studio and select "Start Debugging"
 
 ### Changing Folder Location
