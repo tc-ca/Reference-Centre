@@ -1,0 +1,967 @@
+﻿<UserControl
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    x:Class="MTCO.InspectionMobileApp.ReferenceCentre.Views.ReferenceCentre"
+    xmlns:app="clr-namespace:MTCO.InspectionMobileApp.ReferenceCentre.Converters"
+    xmlns:lex="http://wpflocalizeextension.codeplex.com"   
+    lex:LocalizeDictionary.DesignCulture="en-CA"  
+    lex:LocalizeDictionary.OutputMissingKeys="True"
+    lex:ResxLocalizationProvider.DefaultAssembly="MTCO-SMTC(ACC)"
+    lex:ResxLocalizationProvider.DefaultDictionary="Resources"      
+    
+    prism:ViewModelLocator.AutoWireViewModel="True"                          
+    mc:Ignorable="d"              
+    MinWidth="940" MinHeight="400">
+
+    <UserControl.Resources>
+        <app:NullImageConverter x:Key="nullImageConverter"/>
+        <SolidColorBrush x:Key="InfoPanelBrush" Color="#FFCCCCCC" />
+        <!--Start of Testing -->
+        <!--Icon View-->
+        <DataTemplate x:Key="IconViewTemplate">
+            <Button Margin="5" Command="{Binding OpenFolderCommand}" 
+                                                    Width="70" Height="110"
+                                                Foreground="Black" Background="LightBlue" Template="{DynamicResource FolderIconButtonControlTemplate}">
+                <Button.InputBindings>
+                    <MouseBinding MouseAction="LeftDoubleClick"  Command="{Binding MouseDoubleClickCommand}"/>
+                </Button.InputBindings>
+                <DockPanel>
+                    <DockPanel.Style>
+                        <Style TargetType="{x:Type DockPanel}">
+                            <Setter Property="Background" Value="White"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                    <Setter Property="Background" Value="LightBlue"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DockPanel.Style>
+                    <Image DockPanel.Dock="Top" Source="{Binding IconSourceString, Converter={StaticResource nullImageConverter}}" Stretch="None" HorizontalAlignment="Center"/>
+                    <TextBlock DockPanel.Dock="Bottom" Text="{Binding FileNameText}"                                                
+                                                           TextWrapping="Wrap" 
+                                                           HorizontalAlignment="Center"/>
+                </DockPanel>
+            </Button>
+        </DataTemplate>
+        <SolidColorBrush x:Key="FileItemFontColor" Color="#FF414141"/>
+        <SolidColorBrush x:Key="FileItemLableFontColor" Color="#FFE3E3E3"/>
+
+        <!--CardView-->
+        <DataTemplate x:Key="CardViewTemplate">
+            <Border BorderThickness="0,0,0,3" BorderBrush="#FFC3C3C3" 
+                    Margin="10"
+                    Background="White">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="11*"/>
+                        <RowDefinition Height="2*"/>
+                    </Grid.RowDefinitions>
+                    <Button Grid.Row="0" 
+                            Command="{Binding MouseDoubleClickCommand}"
+                            Template="{DynamicResource FolderIconButtonControlTemplate}" 
+                            MinWidth="319" MinHeight="260">
+                        <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="White">
+                            <Border HorizontalAlignment="Left" VerticalAlignment="Top">
+                            <!--<Image Source="{Binding IconSource}" Stretch="Uniform" HorizontalAlignment="Left"
+                                   Margin="0,10,0,0" Height="80"  Width="Auto" VerticalAlignment="Top"/>-->
+                                <Image  Stretch="Uniform" HorizontalAlignment="Left" Height="80"  Width="Auto" VerticalAlignment="Top"
+                                        Source="{Binding IconSourceString, Converter={StaticResource nullImageConverter}}" Margin="-10,0,0,0"/>
+                            </Border>
+                            <Viewbox Stretch="Uniform" Margin="0,10,0,0" MaxHeight="70" HorizontalAlignment="Left" VerticalAlignment="Top"  >
+                                <TextBlock x:Name="fileNameLbl" Text="{Binding FileNameText}" Width="310" 
+                                        TextWrapping="Wrap" HorizontalAlignment="Left" 
+                                       FontSize="20" Foreground="{DynamicResource FileItemFontColor}" VerticalAlignment="Top"/>
+                            </Viewbox>
+                            <TextBlock x:Name="filePathLbl" Text="{lex:Loc lblPath}" Margin="0,10,0,0" TextWrapping="Wrap" HorizontalAlignment="Stretch"
+                                       FontSize="14" Height="Auto" Width="Auto" Foreground="{DynamicResource FileItemLableFontColor}">
+                                <TextBlock.Style>
+                                    <Style  TargetType="{x:Type TextBlock}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsSystemItem}" Value="True">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                            <Viewbox Stretch="Uniform" Margin="0,3,0,0" MaxHeight="70" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                                <TextBlock x:Name="filePath" Text="{Binding FilePath}" Margin="0" TextWrapping="Wrap" HorizontalAlignment="Left"
+                                       FontSize="12" Height="Auto" Width="310" Foreground="{DynamicResource FileItemFontColor}" VerticalAlignment="Top"/>
+                                <Viewbox.Style>
+                                    <Style  TargetType="{x:Type Viewbox}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsSystemItem}" Value="True">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Viewbox.Style>
+                            </Viewbox>
+                        </StackPanel>
+                    </Button>
+                    <DockPanel Grid.Row="1" LastChildFill="True">
+                        <ToggleButton x:Name="fileFavBut" Template="{DynamicResource FileFavToggleButtonControlTemplate}" 
+                                      IsChecked="{Binding IsFavorited}"
+                                      Command="{Binding FavoriteCheckCommand}" Margin="5" Width="34" Height="34" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}"
+                                      >
+                            <ToggleButton.Style>
+                                <Style  TargetType="{x:Type ToggleButton}">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSystemItem}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsFolder}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ToggleButton.Style>
+                        </ToggleButton>
+                        <ToggleButton x:Name="InfoButton" Template="{DynamicResource InfoToggleButtonControlTemplate}" 
+                                      Command="{Binding InfoPanelCheckCommand}"
+                                      IsChecked="{Binding IsInfoMenuOpen}" Width="34" Height="34" Padding="0" Margin="25,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+                            <ToggleButton.Style>
+                                <Style  TargetType="{x:Type ToggleButton}">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSystemItem}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsFolder}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ToggleButton.Style>
+                        </ToggleButton>
+                        <Button x:Name="OpenChildButton" HorizontalAlignment="Right" 
+                                Template="{DynamicResource OpenChildButtonControlTemplate}"
+                                Command="{Binding MouseDoubleClickCommand}" HorizontalContentAlignment="Right" 
+                                VerticalContentAlignment="Stretch" Padding="0" Margin="0" Width="34" Height="34" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}"
+                                >
+                            <Button.InputBindings>
+                                <MouseBinding MouseAction="LeftDoubleClick"  Command="{Binding MouseDoubleClickCommand}"/>
+                            </Button.InputBindings>
+                        </Button>
+                    </DockPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+        <Style TargetType="{x:Type ItemsControl}" x:Key="ContainerStyle">
+            <Setter Property="ItemTemplate"  Value="{StaticResource CardViewTemplate}" />
+            <Style.Triggers>
+                <DataTrigger 
+                    Binding="{Binding SelectedTemplate}"
+                    Value="CardView">
+
+                    <Setter Property="ItemTemplate" Value="{StaticResource IconViewTemplate}" />
+
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <!--End of Testing -->
+
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <ControlTemplate x:Key="SearchButtonControlTemplate1" TargetType="{x:Type Button}">
+            <Border x:Name="border"   Margin="0"  Padding="0" 
+                 Background="#FF4AADE6">
+                <Grid x:Name="grid">
+                    <Path x:Name="zoomGlass" Data="M11.172533,4.5060472C9.7125149,4.4715815 8.2318487,4.9251032 6.991972,5.8980989 4.1649685,8.1240907 3.6749678,12.222075 5.9019709,15.052064 8.1279736,17.876053 12.224979,18.368052 15.051982,16.14406 17.881986,13.918068 18.367987,9.8190839 16.145984,6.992095 14.892732,5.401351 13.049698,4.5503616 11.172533,4.5060472z M11.006125,2.8610229E-06C14.271382,-0.0024776459 17.504767,1.4402094 19.681988,4.2071056 22.781992,8.1530905 22.763992,13.55407 19.971989,17.440055L28.537999,28.330013 23.873993,31.999999 15.333983,21.153041C10.864977,23.055034 5.5109701,21.833038 2.3609667,17.833054 -1.403038,13.050072 -0.57803726,6.1240983 4.2049685,2.3611126 6.2236433,0.77318096 8.6233702,0.0018119812 11.006125,2.8610229E-06z" 
+                          Stretch="Uniform" Fill="#FFFFFFFF" Width="18" Height="18" RenderTransformOrigin="0.5,0.5" StrokeThickness="0">
+                        <Path.RenderTransform>
+                            <TransformGroup>
+                                <RotateTransform Angle="0" />
+                                <ScaleTransform ScaleX="1" ScaleY="1" />
+                            </TransformGroup>
+                        </Path.RenderTransform>
+                    </Path>
+                </Grid>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Cursor" Value="Hand" />
+                    <Setter Property="Background" TargetName="border" Value="#FF224F91"/>
+                </Trigger>
+                <Trigger Property="IsDefaulted" Value="True">
+                    <Setter TargetName="border" Property="BorderBrush" Value="#FF4788c8" />
+                    <Setter Property="Cursor" Value="Hand" />
+                </Trigger>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="Background" TargetName="border" Value="#FF224F91"/>
+                    <Setter Property="Cursor" Value="Hand" />
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter TargetName="border" Property="Opacity" Value="0.7" />
+                    <Setter Property="Fill" TargetName="zoomGlass" Value="#FF8F8F8F"/>
+                    <Setter Property="Background" TargetName="border" Value="#FFCDCDCD"/>
+                </Trigger>
+
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ButtonControlTemplate1" TargetType="{x:Type Button}">
+            <Border x:Name="border" 
+                 Background="White" Margin="2"                 >
+                <StackPanel x:Name="stackPanel" Background="{x:Null}" Orientation="Horizontal" >
+                    <ContentPresenter x:Name="contentPresenter"/>
+
+                    <Path x:Name="path" Data="M0,0L8.5539884,0 17.246985,10.709991 17.32099,10.799011 17.359992,10.752991 21.637002,16.022003 17.359992,21.291992 8.6659879,32 0.11099243,32 9.9780006,19.847992 13.043004,16.069 12.970006,15.977997 9.8639869,12.153992z" Stretch="Uniform" Fill="#FF262626" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Margin="5,0,2,0" HorizontalAlignment="Right" d:LayoutOverrides="Height">
+                        <Path.RenderTransform>
+                            <TransformGroup>
+                                <RotateTransform Angle="0" />
+                                <ScaleTransform ScaleX=".6" ScaleY=".6" />
+                            </TransformGroup>
+                        </Path.RenderTransform>
+                    </Path>
+                </StackPanel>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Fill" TargetName="path" Value="White"/>
+                    <Setter Property="Background" TargetName="border" Value="#FF4AADE6"/>
+                    <Setter TargetName="contentPresenter" Property="TextElement.Foreground" Value="White"/>
+
+                </Trigger>
+                <Trigger Property="IsDefaulted" Value="True">
+                    <Setter Property="Foreground" Value="Black"/>
+                </Trigger>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="Fill" TargetName="path" Value="White"/>
+                    <Setter Property="Background" TargetName="border" Value="#FF4AADE6"/>
+                    <Setter TargetName="contentPresenter" Property="TextElement.Foreground" Value="White"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter TargetName="border" Property="Opacity" Value="0.7" />
+                    <Setter Property="Foreground" Value="Black" />
+                </Trigger>
+
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="FolderIconButtonControlTemplate" TargetType="{x:Type Button}">
+            <Grid>
+                <Border x:Name="buttonBg">
+                    <ContentPresenter />
+                </Border>
+            </Grid>
+        </ControlTemplate>
+        <ControlTemplate x:Key="OpenButtonTemplate" TargetType="{x:Type Button}">
+            <StackPanel x:Name="grid" Width="50" Height="70">
+                <Grid  Height="50" Width="50">
+                    <Viewbox DockPanel.Dock="Left" x:Name="folderOpen">
+                        <Grid>
+                            <Grid x:Name="backgroundGrid" Width="256" Height="256" Visibility="Visible">
+                                <Path Data="M50.5,4.7500001C25.232973,4.75 4.75,25.232973 4.7500001,50.5 4.75,75.767029 25.232973,96.25 50.5,96.25 75.767029,96.25 96.25,75.767029 96.25,50.5 96.25,25.232973 75.767029,4.75 50.5,4.7500001z M50.5,0C78.390381,0 101,22.609621 101,50.5 101,78.390381 78.390381,101 50.5,101 22.609621,101 0,78.390381 0,50.5 0,22.609621 22.609621,0 50.5,0z" Stretch="Fill" Fill="#FF6C7072" x:Name="Stroke" Visibility="Visible" />
+                            </Grid>
+                            <Path x:Name="path" Data="M0,10.999998L32,10.999998 29.400024,26.6 2.7000122,26.6z M2.7000122,0L13.5,0 13.5,3.3000179 29.400024,3.3000179 29.400024,7.2000106 2.7999878,7.2000106 2.7999878,3.6000056z" Stretch="Uniform" Fill="#FF959595" Width="166" Height="166" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
+                                <Path.RenderTransform>
+                                    <TransformGroup>
+                                        <RotateTransform Angle="0" />
+                                        <ScaleTransform ScaleX="1" ScaleY="1" />
+                                    </TransformGroup>
+                                </Path.RenderTransform>
+                            </Path>
+                        </Grid>
+                    </Viewbox>
+                </Grid>
+                <ContentPresenter DockPanel.Dock="Right" x:Name="contentPresenter" Grid.Column="0" OpacityMask="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </StackPanel>
+
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Cursor" Value="Hand" />
+                    <Setter Property="Fill" TargetName="path" Value="#FFE6AC13"/>
+                    <Setter Property="Fill" TargetName="Stroke" Value="#FF00B0E4"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="Foreground" Value="#FF00B0E4"/>
+                </Trigger>
+                <Trigger Property="IsDefaulted" Value="True">
+                    <Setter Property="Foreground" Value="black" />
+                    <Setter Property="Cursor" Value="Hand" />
+                </Trigger>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="Foreground" Value="black" />
+                    <Setter Property="Cursor" Value="Hand" />
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="Black" />
+                </Trigger>
+
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="FavButtonTemplate" TargetType="{x:Type Button}">
+            <StackPanel x:Name="grid" Width="100" Height="70">
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="Favorited">
+                        <VisualStateGroup.Transitions>
+                            <VisualTransition GeneratedDuration="0">
+                                <Storyboard>
+                                    <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="path">
+                                        <EasingColorKeyFrame KeyTime="0" Value="#FFFFA200"/>
+                                    </ColorAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </VisualTransition>
+                        </VisualStateGroup.Transitions>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+                <Grid  Height="50" Width="50">
+                    <Viewbox DockPanel.Dock="Left" x:Name="folderOpen">
+                        <Grid>
+                            <Grid x:Name="backgroundGrid" Width="256" Height="256" Visibility="Visible">
+                                <Path Data="M50.5,4.7500001C25.232973,4.75 4.75,25.232973 4.7500001,50.5 4.75,75.767029 25.232973,96.25 50.5,96.25 75.767029,96.25 96.25,75.767029 96.25,50.5 96.25,25.232973 75.767029,4.75 50.5,4.7500001z M50.5,0C78.390381,0 101,22.609621 101,50.5 101,78.390381 78.390381,101 50.5,101 22.609621,101 0,78.390381 0,50.5 0,22.609621 22.609621,0 50.5,0z" Stretch="Fill" Fill="#FF6C7072" x:Name="Stroke" Visibility="Visible" />
+                            </Grid>
+                            <Path x:Name="path" Data="M16,0L19.8,12.200003 32,12.200003 22.1,19.700004 25.9,31.900007 16,24.400005 6.0999994,31.900007 9.9000001,19.700004 0,12.200003 12.2,12.200003z" Stretch="Uniform" Fill="#FF959595" Width="166" Height="166" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
+                                <Path.RenderTransform>
+                                    <TransformGroup>
+                                        <RotateTransform Angle="0" />
+                                        <ScaleTransform ScaleX="1" ScaleY="1" />
+                                    </TransformGroup>
+                                </Path.RenderTransform>
+                            </Path>
+
+                        </Grid>
+                    </Viewbox>
+                </Grid>
+                <ContentPresenter DockPanel.Dock="Right" x:Name="contentPresenter" Grid.Column="0" OpacityMask="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </StackPanel>
+
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Cursor" Value="Hand" />
+                    <Setter Property="Fill" TargetName="path" Value="#FFE6AC13"/>
+                    <Setter Property="Fill" TargetName="Stroke" Value="#FF00B0E4"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="Foreground" Value="#FF00B0E4"/>
+                </Trigger>
+                <Trigger Property="IsDefaulted" Value="True">
+                    <Setter Property="Foreground" Value="black" />
+                    <Setter Property="Cursor" Value="Hand" />
+                </Trigger>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="Foreground" Value="black" />
+                    <Setter Property="Cursor" Value="Hand" />
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="Black" />
+                </Trigger>
+
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ShowFavButtonTemplate" TargetType="{x:Type Button}">
+            <Border x:Name="border" 
+                BorderThickness="0"
+                Padding="5" Background="#FFFFB900">
+                <StackPanel x:Name="grid" Orientation="Horizontal">
+                    <Border Background="#FFFCAE03" Padding="4">
+                        <Path x:Name="star"
+                              Data="M16,0L19.8,12.200003 32,12.200003 22.1,19.700004 25.9,31.900007 16,24.400005 6.0999994,31.900007 9.9000001,19.700004 0,12.200003 12.2,12.200003z" 
+                              Stretch="Uniform" Fill="#FFFFFFFF"   >
+                            <Path.RenderTransform>
+                                <TransformGroup>
+                                    <RotateTransform Angle="0" />
+
+                                </TransformGroup>
+                            </Path.RenderTransform>
+                        </Path>
+                    </Border>
+                    <ContentPresenter x:Name="contentPresenter" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                </StackPanel>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="border" Property="BorderBrush" Value="#FF4788c8" />
+                    <Setter Property="Foreground" Value="#FFAC5811" />
+                    <Setter Property="Cursor" Value="Hand" />
+                    <Setter Property="Fill" TargetName="star" Value="#FFAC5811"/>
+                </Trigger>
+                <Trigger Property="IsDefaulted" Value="True">
+                    <Setter TargetName="border" Property="BorderBrush" Value="#FF4788c8" />
+                    <Setter Property="Foreground" Value="White" />
+                    <Setter Property="Cursor" Value="Hand" />
+                </Trigger>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter TargetName="border" Property="BorderBrush" Value="#FF4788c8" />
+                    <Setter Property="Foreground" Value="#FFF07D1D" />
+                    <Setter Property="Cursor" Value="Hand" />
+                    <Setter Property="Fill" TargetName="star" Value="#FFAC5811"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter TargetName="border" Property="Opacity" Value="0.7" />
+                    <Setter Property="Foreground" Value="White" />
+                </Trigger>
+
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="FavToggleButton" TargetType="{x:Type ToggleButton}">
+
+            <StackPanel x:Name="grid" Orientation="Horizontal" Background="#FFFFB900">
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualStateGroup.Transitions>
+                            <VisualTransition GeneratedDuration="0:0:0.2" To="MouseOver"/>
+                            <VisualTransition From="MouseOver" GeneratedDuration="0:0:0.2"/>
+                            <VisualTransition GeneratedDuration="0:0:0.2" To="Checked"/>
+                        </VisualStateGroup.Transitions>
+                        <VisualState x:Name="Normal"/>
+
+                        <VisualState x:Name="MouseOver">
+                            <Storyboard>
+                                <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)" Storyboard.TargetName="grid">
+                                    <EasingColorKeyFrame KeyTime="0" Value="#FF0097DE"/>
+                                </ColorAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </VisualState>
+
+                        <VisualState x:Name="Checked">
+                            <Storyboard>
+                                <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="star">
+                                    <EasingColorKeyFrame KeyTime="0" Value="#FFFFF300"/>
+                                </ColorAnimationUsingKeyFrames>
+                                <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)" Storyboard.TargetName="grid">
+                                    <EasingColorKeyFrame KeyTime="0" Value="#FFC17200"/>
+                                </ColorAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </VisualState>
+                        <VisualState x:Name="Unchecked" />
+                        <VisualState x:Name="Disabled"/>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+                <Border x:Name="border" Background="#FFFCAE03" Padding="8">
+                    <Path x:Name="star"
+                              Data="M16,0L19.8,12.200003 32,12.200003 22.1,19.700004 25.9,31.900007 16,24.400005 6.0999994,31.900007 9.9000001,19.700004 0,12.200003 12.2,12.200003z" 
+                              Stretch="Uniform" Fill="#FFFFFFFF"   >
+                        <Path.RenderTransform>
+                            <TransformGroup>
+                                <RotateTransform Angle="0" />
+
+                            </TransformGroup>
+                        </Path.RenderTransform>
+                    </Path>
+                </Border>
+                <ContentPresenter x:Name="contentPresenter" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+            </StackPanel>
+        </ControlTemplate>
+        <ControlTemplate x:Key="FileFavButtonTemplate" TargetType="{x:Type ToggleButton}">
+            <StackPanel x:Name="grid" Width="100" Height="70">
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="Favorited">
+                        <VisualStateGroup.Transitions>
+                            <VisualTransition GeneratedDuration="0">
+                                <Storyboard>
+                                    <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="path">
+                                        <EasingColorKeyFrame KeyTime="0" Value="#FFFFA200"/>
+                                    </ColorAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </VisualTransition>
+                        </VisualStateGroup.Transitions>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+                <Grid  Height="50" Width="50">
+                    <Viewbox DockPanel.Dock="Left" x:Name="folderOpen">
+                        <Grid>
+                            <Grid x:Name="backgroundGrid" Width="256" Height="256" Visibility="Visible">
+                                <Path Data="M50.5,4.7500001C25.232973,4.75 4.75,25.232973 4.7500001,50.5 4.75,75.767029 25.232973,96.25 50.5,96.25 75.767029,96.25 96.25,75.767029 96.25,50.5 96.25,25.232973 75.767029,4.75 50.5,4.7500001z M50.5,0C78.390381,0 101,22.609621 101,50.5 101,78.390381 78.390381,101 50.5,101 22.609621,101 0,78.390381 0,50.5 0,22.609621 22.609621,0 50.5,0z" Stretch="Fill" Fill="#FF6C7072" x:Name="Stroke" Visibility="Visible" />
+                            </Grid>
+                            <Path x:Name="path" Data="M16,0L19.8,12.200003 32,12.200003 22.1,19.700004 25.9,31.900007 16,24.400005 6.0999994,31.900007 9.9000001,19.700004 0,12.200003 12.2,12.200003z" Stretch="Uniform" Fill="#FF959595" Width="166" Height="166" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
+                                <Path.RenderTransform>
+                                    <TransformGroup>
+                                        <RotateTransform Angle="0" />
+                                        <ScaleTransform ScaleX="1" ScaleY="1" />
+                                    </TransformGroup>
+                                </Path.RenderTransform>
+                            </Path>
+
+                        </Grid>
+                    </Viewbox>
+                </Grid>
+                <ContentPresenter DockPanel.Dock="Right" x:Name="contentPresenter" Grid.Column="0" OpacityMask="Black" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </StackPanel>
+
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="Fill" TargetName="path" Value="#FFE6AC13"/>
+                    <Setter Property="Fill" TargetName="Stroke" Value="#FFE6AC13"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Cursor" Value="Hand" />
+                    <Setter Property="Fill" TargetName="path" Value="#FFE6AC13"/>
+                    <Setter Property="Fill" TargetName="Stroke" Value="#FF00B0E4"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="Foreground" Value="#FF00B0E4"/>
+                </Trigger>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="Foreground" Value="black" />
+                    <Setter Property="Cursor" Value="Hand" />
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="Black" />
+                </Trigger>
+
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="FileFavToggleButtonControlTemplate" TargetType="{x:Type ToggleButton}">
+            <Grid Background="White">
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="CheckStates">
+                        <VisualState x:Name="Checked">
+                            <Storyboard>
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Stroke)" Storyboard.TargetName="path">
+                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Null}"/>
+                                </ObjectAnimationUsingKeyFrames>
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill)" Storyboard.TargetName="path">
+                                    <DiscreteObjectKeyFrame KeyTime="0">
+                                        <DiscreteObjectKeyFrame.Value>
+                                            <SolidColorBrush Color="#FFF9CC00"/>
+                                        </DiscreteObjectKeyFrame.Value>
+                                    </DiscreteObjectKeyFrame>
+                                </ObjectAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </VisualState>
+                        <VisualState x:Name="Unchecked"/>
+                        <VisualState x:Name="Indeterminate"/>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+                <Path x:Name="path" Data="M16.001007,0L20.944,10.533997 32,12.223022 23.998993,20.421997 25.889008,32 16.001007,26.533997 6.1109924,32 8,20.421997 0,12.223022 11.057007,10.533997z" 
+                      Stretch="Uniform" Fill="{x:Null}" 
+                      Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" Stroke="#FFCCCCCC" StrokeThickness="2">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <RotateTransform Angle="0" />
+                            <ScaleTransform ScaleX="1" ScaleY="1" />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+            </Grid>
+        </ControlTemplate>
+        <ControlTemplate x:Key="InfoToggleButtonControlTemplate" TargetType="{x:Type ToggleButton}">
+            <Grid Background="White">
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="CheckStates">
+                        <VisualState x:Name="Checked">
+                            <Storyboard>
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill)" Storyboard.TargetName="path">
+                                    <DiscreteObjectKeyFrame KeyTime="0">
+                                        <DiscreteObjectKeyFrame.Value>
+                                            <SolidColorBrush Color="#FF64E3FF"/>
+                                        </DiscreteObjectKeyFrame.Value>
+                                    </DiscreteObjectKeyFrame>
+                                </ObjectAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </VisualState>
+                        <VisualState x:Name="Unchecked"/>
+                        <VisualState x:Name="Indeterminate"/>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+                <Path x:Name="path" Data="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm0-338c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z" Stretch="Uniform" Fill="{DynamicResource InfoPanelBrush}" Width="Auto" Height="Auto" RenderTransformOrigin="0.5,0.5" StrokeThickness="0">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <RotateTransform Angle="0" />
+                            <ScaleTransform ScaleX="1" ScaleY="1" />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+            </Grid>
+        </ControlTemplate>
+        <ControlTemplate x:Key="OpenChildButtonControlTemplate" TargetType="{x:Type Button}">
+            <Grid HorizontalAlignment="Stretch" Background="White">
+                <Path Data="M1.4200482,0L17.351001,16.046996 1.4980513,31.996001 0.078979631,30.585997 14.531046,16.046019 0,1.4089964z" Stretch="Uniform"
+                      Fill="{DynamicResource InfoPanelBrush}" Width="Auto" Height="Auto" 
+                      Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Stretch" StrokeThickness="0">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <TransformGroup.Children>
+                                <RotateTransform Angle="0" />
+                                <ScaleTransform ScaleX="1" ScaleY="1" />
+                            </TransformGroup.Children>
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+            </Grid>
+        </ControlTemplate>
+        <ControlTemplate x:Key="InfoCloseButtonTemplate" TargetType="{x:Type Button}">
+            <Grid Background="White">
+                <Path Data="M 0,0 L 20,20 M 20,0 L 0,20" Fill="{x:Null}" Stroke="#FFD6D6D6" 
+                      StrokeThickness="4" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Grid>
+        </ControlTemplate>
+        <ControlTemplate x:Key="RightPanelFavoriteButtonTemplate" TargetType="{x:Type ToggleButton}">
+            <Grid>
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="CheckStates">
+                        <VisualState x:Name="Checked">
+                            <Storyboard>
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill)" Storyboard.TargetName="bigstar">
+                                    <DiscreteObjectKeyFrame KeyTime="0">
+                                        <DiscreteObjectKeyFrame.Value>
+                                            <SolidColorBrush Color="#FFFFDC00"/>
+                                        </DiscreteObjectKeyFrame.Value>
+                                    </DiscreteObjectKeyFrame>
+                                </ObjectAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </VisualState>
+                        <VisualState x:Name="Unchecked"/>
+                        <VisualState x:Name="Indeterminate"/>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+                <Ellipse Fill="White" HorizontalAlignment="Center" Height="70" Stroke="{StaticResource InfoPanelBrush}" StrokeThickness="3" VerticalAlignment="Center" Width="70" RenderTransformOrigin="0.5,0.5"/>
+                <Path x:Name="bigstar" Data="M528.1 171.5L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.4L288 385.4l-124.3 65.3 23.7-138.4-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z" 
+                      Stretch="Uniform" Fill="{DynamicResource InfoPanelBrush}" Width="36" Height="36" 
+                      Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <RotateTransform Angle="0" />
+                            <ScaleTransform ScaleX="1" ScaleY="1" />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+            </Grid>
+        </ControlTemplate>
+        <ControlTemplate x:Key="PathCopyToggleButtonControlTemplate" TargetType="{x:Type Button}">
+            <ControlTemplate.Resources>
+                <Storyboard x:Key="OnClick1">
+                    <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" 
+                                                  Storyboard.TargetName="chain"
+                                                  FillBehavior="Stop"
+                                                  Duration="00:00:0.5"
+                                                  >
+                        <EasingColorKeyFrame KeyTime="0:0:0.1" Value="#FF00C5FF">
+                            <EasingColorKeyFrame.EasingFunction>
+                                <BackEase EasingMode="EaseInOut"/>
+                            </EasingColorKeyFrame.EasingFunction>
+                        </EasingColorKeyFrame>
+                    </ColorAnimationUsingKeyFrames>
+                </Storyboard>
+            </ControlTemplate.Resources>
+            <Grid>
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="CommonStates"/>
+                </VisualStateManager.VisualStateGroups>
+                <Ellipse Fill="White" HorizontalAlignment="Center" Height="70" StrokeThickness="3" VerticalAlignment="Center" Width="70" RenderTransformOrigin="0.5,0.5" Stroke="{DynamicResource InfoPanelBrush}"/>
+                <Path x:Name="chain" Data="M314.222 197.78c51.091 51.091 54.377 132.287 9.75 187.16-6.242 7.73-2.784 3.865-84.94 86.02-54.696 54.696-143.266 54.745-197.99 0-54.711-54.69-54.734-143.255 0-197.99 32.773-32.773 51.835-51.899 63.409-63.457 7.463-7.452 20.331-2.354 20.486 8.192a173.31 173.31 0 0 0 4.746 37.828c.966 4.029-.272 8.269-3.202 11.198L80.632 312.57c-32.755 32.775-32.887 85.892 0 118.8 32.775 32.755 85.892 32.887 118.8 0l75.19-75.2c32.718-32.725 32.777-86.013 0-118.79a83.722 83.722 0 0 0-22.814-16.229c-4.623-2.233-7.182-7.25-6.561-12.346 1.356-11.122 6.296-21.885 14.815-30.405l4.375-4.375c3.625-3.626 9.177-4.594 13.76-2.294 12.999 6.524 25.187 15.211 36.025 26.049zM470.958 41.04c-54.724-54.745-143.294-54.696-197.99 0-82.156 82.156-78.698 78.29-84.94 86.02-44.627 54.873-41.341 136.069 9.75 187.16 10.838 10.838 23.026 19.525 36.025 26.049 4.582 2.3 10.134 1.331 13.76-2.294l4.375-4.375c8.52-8.519 13.459-19.283 14.815-30.405.621-5.096-1.938-10.113-6.561-12.346a83.706 83.706 0 0 1-22.814-16.229c-32.777-32.777-32.718-86.065 0-118.79l75.19-75.2c32.908-32.887 86.025-32.755 118.8 0 32.887 32.908 32.755 86.025 0 118.8l-45.848 45.84c-2.93 2.929-4.168 7.169-3.202 11.198a173.31 173.31 0 0 1 4.746 37.828c.155 10.546 13.023 15.644 20.486 8.192 11.574-11.558 30.636-30.684 63.409-63.457 54.733-54.735 54.71-143.3-.001-197.991z" 
+                    Stretch="Uniform" Fill="#FFCCCCCC" Width="36" Height="36" 
+                    Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <RotateTransform Angle="0" />
+                            <ScaleTransform ScaleX=".9" ScaleY=".9" />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <EventTrigger RoutedEvent="ButtonBase.Click">
+                    <BeginStoryboard Storyboard="{StaticResource OnClick1}"/>
+                </EventTrigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ButtonControlTemplate2" TargetType="{x:Type Button}">
+            <ControlTemplate.Resources>
+                <Storyboard x:Key="OnClick1"/>
+                <Storyboard x:Key="OnClick2">
+                    <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)"
+                                                  Storyboard.TargetName="viewicon" FillBehavior="Stop" Duration="00:00:0.5">
+                        <EasingColorKeyFrame KeyTime="0:0:0.1" Value="#FF00D1FF"/>
+                    </ColorAnimationUsingKeyFrames>
+                </Storyboard>
+            </ControlTemplate.Resources>
+            <Grid>
+                <Ellipse Fill="White" HorizontalAlignment="Center" Height="70" Stroke="{StaticResource InfoPanelBrush}" StrokeThickness="3" VerticalAlignment="Center" Width="70" RenderTransformOrigin="0.5,0.5"/>
+                <Path x:Name="viewicon" Data="M569.354 231.631C512.97 135.949 407.81 72 288 72 168.14 72 63.004 135.994 6.646 231.631a47.999 47.999 0 0 0 0 48.739C63.031 376.051 168.19 440 288 440c119.86 0 224.996-63.994 281.354-159.631a47.997 47.997 0 0 0 0-48.738zM288 392c-102.556 0-192.091-54.701-240-136 44.157-74.933 123.677-127.27 216.162-135.007C273.958 131.078 280 144.83 280 160c0 30.928-25.072 56-56 56s-56-25.072-56-56l.001-.042C157.794 179.043 152 200.844 152 224c0 75.111 60.889 136 136 136s136-60.889 136-136c0-31.031-10.4-59.629-27.895-82.515C451.704 164.638 498.009 205.106 528 256c-47.908 81.299-137.444 136-240 136z" 
+                    Stretch="Uniform" Fill="#FFCCCCCC" Width="36" Height="36" 
+                    Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <RotateTransform Angle="0" />
+                            <ScaleTransform ScaleX=".9" ScaleY=".9" />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <EventTrigger RoutedEvent="ButtonBase.Click">
+                    <BeginStoryboard x:Name="OnClick2_BeginStoryboard" Storyboard="{StaticResource OnClick2}"/>
+                </EventTrigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </UserControl.Resources>
+    <DockPanel  LastChildFill="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="#FFF3F3F3">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="VisualStateGroup">
+                <VisualStateGroup.Transitions>
+                    <VisualTransition GeneratedDuration="0" To="VisualState">
+                        <Storyboard>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="rightDock">
+                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="300"/>
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualTransition>
+                    <VisualTransition From="VisualState" GeneratedDuration="0">
+                        <Storyboard>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="rightDock">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualTransition>
+                </VisualStateGroup.Transitions>
+                <VisualState x:Name="VisualState"/>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <Border x:Name="NavMenuArea" BorderBrush="#FFD6D6D6" BorderThickness="0,0,0,3"  DockPanel.Dock="Top" Margin="0,2,0,0" Padding="2" Background="White" >
+            <Grid Height="40">
+                <ItemsControl x:Name="navMenu" ItemsSource="{Binding FolderMenu}" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <ItemsControl.Style>
+                        <Style  TargetType="{x:Type ItemsControl}">
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsFavoriteView}" Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ItemsControl.Style>
+                    <ItemsControl.Template>
+                        <ControlTemplate>
+                            <WrapPanel  FlowDirection="LeftToRight" IsItemsHost="true"/>
+                        </ControlTemplate>
+                    </ItemsControl.Template>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel Background="White">
+                                <Button Command="{Binding OpenFolderCommand}" 
+                                            Style="{DynamicResource StandardButton}" Template="{DynamicResource ButtonControlTemplate1}" Foreground="Black"
+                                            Background="{x:Null}" 
+                                            >
+                                    <TextBlock Text="{Binding FileNameText}" />
+                                </Button>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <TextBlock Text="{lex:Loc btnFavorites}" Foreground="#FF838383" FontSize="24" FontWeight="Bold" FontFamily="Calibri" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="14,0,0,0">
+                    <TextBlock.Style>
+                        <Style  TargetType="{x:Type TextBlock}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsFavoriteView}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <StackPanel x:Name="FavoritesButtonStack" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="2,0,5,2">
+                    <ToggleButton x:Name="favToggleButton" Grid.Column="0" Content="{lex:Loc btnFavorites}" Command="{Binding ShowFavoritesCommand}"
+                                  HorizontalAlignment="Left"  Height="Auto" Margin="0,0,5,0" Width="200" Template="{DynamicResource FavToggleButton}" Foreground="White" FontSize="14" />
+                    <Border BorderThickness="1" BorderBrush="#FF4AADE6">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox x:Name="SearchText" Text="{Binding SearchTerm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                      Width="200" BorderThickness="0">
+                                <TextBox.InputBindings>
+                                    <KeyBinding Key="Return" Command="{Binding SearchCommand}" />
+                                </TextBox.InputBindings>
+                            </TextBox>
+                            <Button BorderThickness="0" x:Name="SearchButton" 
+                                    Command="{Binding SearchCommand}" Template="{DynamicResource SearchButtonControlTemplate1}" 
+                                    HorizontalAlignment="Right" Width="38" Margin="0" Height="Auto"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+        <DockPanel x:Name="rightDock" HorizontalAlignment="Right" Width="370" DockPanel.Dock="Right" 
+                   Margin="0" >
+            <DockPanel.Style>
+                <Style  TargetType="{x:Type DockPanel}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsRightPanelVisible}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Width"
+                             From="0" To="370" Duration="0:0:0.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DockPanel.Style>
+            <ScrollViewer x:Name="RightPanel" DockPanel.Dock="Bottom" VerticalScrollBarVisibility="Auto" Margin="0" BorderBrush="{x:Null}">
+                <Border Margin="0" Padding="20" 
+                        BorderThickness="3,0,3,3" Background="White" BorderBrush="#FFD6D6D6">
+                    <DockPanel LastChildFill="True" VerticalAlignment="Stretch">
+                        <StackPanel DockPanel.Dock="Bottom" Margin="0" x:Name="FavOpenButtonStack" Orientation="Horizontal" 
+                                    HorizontalAlignment="Stretch"  Height="100"
+                                    VerticalAlignment="Bottom" >
+                            <StackPanel x:Name="copybuttoncontainer" VerticalAlignment="Bottom">
+                                <Button x:Name="PathCopyButton" Height="70" Width="100" 
+                                    Command="{Binding CopyPathCommand}" 
+                                    CommandParameter="{Binding RightPanelItem}"
+                                    HorizontalAlignment="Center" 
+                                    VerticalAlignment="Bottom"
+                                        Template="{DynamicResource PathCopyToggleButtonControlTemplate}"                                           
+                                            />
+                                <TextBlock Text="{lex:Loc butCopyPath}" Margin="0,5,0,0" FontSize="14" HorizontalAlignment="Center" />
+                            </StackPanel>
+                            <StackPanel x:Name="favbuttoncontainer" VerticalAlignment="Bottom">
+                                <ToggleButton x:Name="FileFavToggleBut" Height="70" Width="100" 
+                                            IsChecked="{Binding IsFileInFavorites}" 
+                                            Command="{Binding OpenFavCommand}" 
+                                            CommandParameter="{Binding RightPanelItem}"
+                                            HorizontalAlignment="Center" 
+                                          VerticalAlignment="Bottom" Template="{DynamicResource RightPanelFavoriteButtonTemplate}"                                           
+                                            />
+                                <TextBlock Text="{lex:Loc btnFavorite}" Margin="0,5,0,0" FontSize="14" HorizontalAlignment="Center" />
+                            </StackPanel>
+                            <StackPanel x:Name="viewbuttoncontainer" VerticalAlignment="Bottom">
+                                <Button x:Name="ViewButton" Height="70" Width="100" 
+                                    Command="{Binding OpenFileCommand}" 
+                                    CommandParameter="{Binding RightPanelItem}"
+                                    HorizontalAlignment="Center" 
+                                    VerticalAlignment="Bottom"
+                                              Template="{DynamicResource ButtonControlTemplate2}"                                           
+                                            />
+                                <TextBlock Text="{lex:Loc butView}" Margin="0,5,0,0" FontSize="14" HorizontalAlignment="Center" />
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel x:Name="Info_Texts" DockPanel.Dock="Top" VerticalAlignment="Top">
+                            <DockPanel x:Name="ToolbarForInfoPanel" >
+                                <Viewbox DockPanel.Dock="Left" Height="86" 
+                                         HorizontalAlignment="Left" VerticalAlignment="Top">
+                                    <Image  Height="128" Width="128" Margin="0" x:Name="icon"
+                                   Source="{Binding IconPath}" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                   />
+                                </Viewbox>
+                                <Button DockPanel.Dock="Right" x:Name="infoCloseButton"
+                                        HorizontalAlignment="Right" VerticalAlignment="Top" 
+                                        Margin="0" Width="24" Height="24" 
+                                        Command="{Binding CloseInfoPanelCommand}"
+                                        Template="{DynamicResource InfoCloseButtonTemplate}" />
+                            </DockPanel>
+                            <StackPanel x:Name="TitleIconStack">
+                                <!--<TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Margin="10,5" 
+                                       x:Name="titleText" TextWrapping="Wrap" Text="{Binding Title}"/>-->
+                                <TextBlock x:Name="fileNameLbl" Text="{Binding Title}" 
+                                           Margin="0,20" TextWrapping="Wrap" HorizontalAlignment="Stretch"
+                                           FontSize="30" Foreground="#FF666666" FontFamily="Calibri" FontWeight="Bold"/>
+                            </StackPanel>
+
+                            <StackPanel>
+                                <TextBlock Text="{lex:Loc lblDateModified}" Height="Auto" Width="Auto" 
+                                           Foreground="{StaticResource InfoPanelBrush}" FontFamily="Calibri" FontSize="14" Margin="0,0,0,5"/>
+                                <TextBlock x:Name="dateModifiedText" TextWrapping="Wrap" 
+                                           Foreground="#FF444444"
+                                           Text="{Binding RightPanelItem.File.LastWriteTime}" 
+                                           FontFamily="Calibri" FontSize="18"/>
+                            </StackPanel>
+
+                            <StackPanel Margin="0,15,0,0">
+                                <TextBlock Text="{lex:Loc lblsizeInBytes}" Height="Auto" Width="Auto" 
+                                           Foreground="{StaticResource InfoPanelBrush}" FontFamily="Calibri" FontSize="14" Margin="0,0,0,5"/>
+                                <TextBlock x:Name="sizeText" TextWrapping="Wrap" 
+                                           Foreground="#FF444444"
+                                           Text="{Binding RightPanelItem.File.Length}" 
+                                           FontFamily="Calibri" FontSize="18"/>
+                            </StackPanel>
+
+                            <StackPanel Margin="0,15,0,0">
+                                <TextBlock Text="{lex:Loc lblDateCreated}" Height="Auto" Width="Auto" 
+                                           Foreground="{StaticResource InfoPanelBrush}" FontFamily="Calibri" FontSize="14" Margin="0,0,0,5"/>
+                                <TextBlock TextWrapping="Wrap" 
+                                           Foreground="#FF444444"
+                                           Text="{Binding RightPanelItem.File.CreationTime}" 
+                                           FontFamily="Calibri" FontSize="18"/>
+                            </StackPanel>
+
+                            <StackPanel Margin="0,15,0,0">
+                                <TextBlock Text="{lex:Loc lblPath}" Height="Auto" Width="Auto" 
+                                           Foreground="{StaticResource InfoPanelBrush}" FontFamily="Calibri" FontSize="14" Margin="0,0,0,5"/>
+                                <TextBlock TextWrapping="Wrap" 
+                                           Foreground="#FF444444"
+                                           Text="{Binding RightPanelItem.FilePath, Mode=OneWay}" 
+                                           FontFamily="Calibri" FontSize="18"/>
+                            </StackPanel>
+
+
+                            <!--<StackPanel x:Name="fileInfoStackPanel" Grid.Row="1" Margin="5,0,5,5" >
+                                <Grid Margin="5" >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition MinWidth="80"/>
+                                        <ColumnDefinition MinWidth="140"/>
+                                    </Grid.ColumnDefinitions>
+                                
+                                </Grid>
+
+
+                                <Grid Margin="5"  >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition MinWidth="80"/>
+                                        <ColumnDefinition MinWidth="140"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{lex:Loc lblDateCreated}" Grid.Row="1"  Grid.Column="0"/>
+                                    <TextBlock Grid.Row="2"  Grid.Column="1"  x:Name="dateCreatedText" 
+                                               TextWrapping="Wrap" Text="{Binding RightPanelItem.File.CreationTime}"/>
+                                </Grid>
+
+                                <Grid  Margin="5" >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition MinWidth="80"/>
+                                        <ColumnDefinition MinWidth="140"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{lex:Loc lblPath}" Grid.Row="0" Grid.Column="0"/>
+                                    <TextBox IsReadOnly="True" Background="Transparent" BorderThickness="0"
+                                             Foreground="Black"  Grid.Row="3" Grid.Column="1" x:Name="pathText"
+                                             TextWrapping="Wrap" Text="{Binding RightPanelItem.FilePath, Mode=OneWay}" Padding="0"/>
+                                </Grid>
+
+
+                            </StackPanel>-->
+
+                        </StackPanel>
+
+
+                    </DockPanel>
+                </Border>
+            </ScrollViewer>
+        </DockPanel>
+        <ScrollViewer PanningMode="Both" VerticalScrollBarVisibility="Auto" 
+                          Background="#FFF3F3F3" MinWidth="940" 
+                          MinHeight="352" Padding="10">
+            <Grid>
+                <ItemsControl x:Name="activitiesControl" ItemsSource="{Binding FileCollection}"
+                                HorizontalContentAlignment="Stretch"                          
+                                ScrollViewer.VerticalScrollBarVisibility="Disabled"                                     
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                                      ItemTemplate="{DynamicResource CardViewTemplate}"
+                                      >
+                    <ItemsControl.Template>
+                        <ControlTemplate>
+                            <WrapPanel IsItemsHost="True" FlowDirection="LeftToRight" Background="#FFF3F3F3" />
+                        </ControlTemplate>
+                    </ItemsControl.Template>
+                </ItemsControl>
+                <TextBlock FontSize="36" Text="{lex:Loc lblNoItemsFound}" Foreground="Gray"
+                               HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" FontFamily="Calibri">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=activitiesControl, Path=HasItems}" Value="False">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>
