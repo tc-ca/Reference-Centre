@@ -10,6 +10,7 @@ It was originally designed for Tablets running on Windows 8.1 and has been teste
 3. Add/Remove Favorites
 
 ![Screenshot of Reference Centre](rcfe1.png?raw=true "Screenshot of Reference Centre")
+![Screenshot of Reference Centre](rcfie.png?raw=true "Screenshot of Reference Centre")
 
 ## Requirements
 - Visual Studio 2019
@@ -52,6 +53,7 @@ Il a été initialement conçu pour les tablettes fonctionnant sous Windows 8.1 
 3. L’ajout et la suppression de favoris 
 
  ![Centre de référence ](rcff1.png?raw=true "Centre de référence ")
+ ![Centre de référence ](rcfif.png?raw=true "Centre de référence ")
 
 ## Exigences 
 - Visual Studio 2019 
